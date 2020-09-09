@@ -1,45 +1,46 @@
-
-// Styles largely cribbed from the roll template of the Roll20 Star Trek
-// Adventures character sheet.  Grabbed Sept 2020.
-const style = {
-  base: 'background-color: rgb(0,19,35); ' +
-    'background-repeat: no-repeat; ' +
-    'border-radius: 15px 15px 15px 15px; ' +
-    'border-spacing: 0; ' +
-    'color: rgb(163,64,113); ' +
-    'font-size: 1.5em; ' +
-    'font-weight: bold; ' +
-    'padding: 2px; ' +
-    'width: 230px;',
-  body: 'border: none; ' +
-    'color: rgb(195,188,222); ' +
-    'font-size: 1em; ' +
-    'margin: 5px 5px 5px 5px; ' +
-    'text-align: center;',
-  quantity: 'display: inline-block; ' +
-    'padding: 5px 5px 0px 5px;',
-  quantMomentum: 'color: #20bcff;',
-  quantThreat: 'color: #d71010; margin-left: 50px;',
-  header: 'padding: 8px 0px 8px 0px;' +
-    'font-size: 2em;',
-  sectionHead: 'background-color: rgb(245,157,8); ' +
-    'border-radius: 2em; ' +
-    'display: block; ' +
-    'height: 15px; ' +
-    'letter-spacing: 1px; ' +
-    'text-transform: uppercase;',
-  headSpan: 'background: rgb(0,19,35); ' +
-    'color: rgb(163,64,113); ' +
-    'font-size: 15px; ' +
-    'padding: 0px 5px 0px 5px; ' +
-    'vertical-align: top;'
-}
-
 var STAPoolTracker = STAPoolTracker || (function () {
   'use strict'
 
   const STATE_NAME = 'STAPools'
   const SCRIPT_NAME = 'Star Trek Pools'
+
+  // Styles largely cribbed from the roll template of the Roll20 Star Trek
+  // Adventures character sheet.  Grabbed Sept 2020.
+  const STYLES = {
+    base: 'background-color: rgb(0,19,35); ' +
+      'background-repeat: no-repeat; ' +
+      'border-radius: 15px 15px 15px 15px; ' +
+      'border-spacing: 0; ' +
+      'color: rgb(163,64,113); ' +
+      'font-size: 1.5em; ' +
+      'font-weight: bold; ' +
+      'padding: 2px; ' +
+      'width: 230px;',
+    body: 'border: none; ' +
+      'color: rgb(195,188,222); ' +
+      'font-size: 1em; ' +
+      'margin: 5px 5px 5px 5px; ' +
+      'text-align: center;',
+    quantity: 'display: inline-block; ' +
+      'padding: 5px 5px 0px 5px;',
+    quantMomentum: 'color: #20bcff;',
+    quantThreat: 'color: #d71010; margin-left: 50px;',
+    header: 'padding: 8px 0px 8px 0px;' +
+      'font-size: 2em;',
+    sectionHead: 'background-color: rgb(245,157,8); ' +
+      'border-radius: 2em; ' +
+      'display: block; ' +
+      'height: 15px; ' +
+      'letter-spacing: 1px; ' +
+      'text-transform: uppercase;',
+    headSpan: 'background: rgb(0,19,35); ' +
+      'color: rgb(163,64,113); ' +
+      'font-size: 15px; ' +
+      'line-height: 1;' +
+      'padding: 0px 5px 0px 5px; ' +
+      'vertical-align: top;'
+  }
+
   const CMD = {
     MOMENTUM: '!momentum',
     THREAT: '!threat',
