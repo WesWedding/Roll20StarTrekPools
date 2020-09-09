@@ -38,11 +38,19 @@ const style = {
 var STAPoolTracker = STAPoolTracker || (function () {
   'use strict'
 
+  const STATE_NAME = 'STAPools'
+  const SCRIPT_NAME = 'Star Trek Pools'
   const CMD = {
     MOMENTUM: '!momentum',
     THREAT: '!threat',
   }
-  const STATE_NAME = 'STAPools'
+
+  const POOLS = {
+    MOMENTUM: 'momentum',
+    THREAT: 'threat',
+  }
+
+  let _handout = null
 
   function init () {
     if (!_.has(state, STATE_NAME)) {
@@ -81,10 +89,10 @@ var STAPoolTracker = STAPoolTracker || (function () {
 
     switch (command) {
       case CMD.MOMENTUM:
-        _modifyPool(playerid, 'momentum', arg0,arg1)
+        _modifyPool(playerid, POOLS.MOMENTUM, arg0,arg1)
         break
       case CMD.THREAT:
-        _modifyPool(playerid, 'threat', arg0, arg1)
+        _modifyPool(playerid, POOLS.THREAT, arg0, arg1)
         break
       default:
         // Do nothing.
@@ -119,11 +127,11 @@ var STAPoolTracker = STAPoolTracker || (function () {
       const value = parseInt(arg1)
 
       if (!arg1) {
-        _reportError(playerId, 'Missing value to set momentum to.')
+        _reportError(playerId, 'Missing value to set ' + poolName +' to.')
         return
       }
       if (!_.isNumber(value)) {
-        _reportError(playerId, 'Invalid value (Not a number!)')
+        _reportError(playerId, 'Invalid value for ' + poolName + ' (Not a number!)')
         return
       }
 
@@ -134,22 +142,22 @@ var STAPoolTracker = STAPoolTracker || (function () {
 
   function _chatPools() {
     const html = _buildPoolHtml()
-    sendChat('Pools', html)
+    sendChat(SCRIPT_NAME, html)
   }
 
   function _buildPoolHtml() {
-    const momentum = state[STATE_NAME].momentum
-    const threat = state[STATE_NAME].threat
+    const momentum = state[STATE_NAME][POOLS.MOMENTUM]
+    const threat = state[STATE_NAME][POOLS.THREAT]
 
     return '' +
-      '<div style="' + style.base + '">' +
-        '<div style="' + style.body + '">' +
-          '<div style="' + style.quantity + '">' +
-            '<span style="' + style.quantMomentum + '">' + momentum.toString(10) + '</span>' +
-            '<span style="' + style.quantThreat + '">' + threat.toString(10) + '</span>' +
+      '<div style="' + STYLES.base + '">' +
+        '<div style="' + STYLES.body + '">' +
+          '<div style="' + STYLES.quantity + '">' +
+            '<span style="' + STYLES.quantMomentum + '">' + momentum.toString(10) + '</span>' +
+            '<span style="' + STYLES.quantThreat + '">' + threat.toString(10) + '</span>' +
           '</div>' +
-          '<div style="' + style.header + '">' +
-            '<div style="' + style.sectionHead + '"><span style="' + style.headSpan + '">Momentum / Threat</span></div>' +
+          '<div style="' + STYLES.header + '">' +
+            '<div style="' + STYLES.sectionHead + '"><span style="' + STYLES.headSpan + '">Momentum / Threat</span></div>' +
           '</div>' +
         '</div>' +
       '</div>'
@@ -157,29 +165,29 @@ var STAPoolTracker = STAPoolTracker || (function () {
 
   function setMomentum(val) {
     if (!_.isNumber(val)) return
-    state[STATE_NAME].momentum = val
+    state[STATE_NAME][POOLS.MOMENTUM] = val
   }
 
   function setThreat(val) {
     if (!_.isNumber(val)) return
-    state[STATE_NAME].momentum = val
+    state[STATE_NAME][POOLS.THREAT] = val
   }
 
   function modMomentum(val) {
     if (!_.isNumber(val)) return
-    state[STATE_NAME].momentum += val
+    state[STATE_NAME][POOLS.MOMENTUM] += val
   }
   function modThreat(val) {
     if (!_.isNumber(val)) return
-    state[STATE_NAME].momentum += val
+    state[STATE_NAME][POOLS.THREAT] += val
   }
   function _reportError(playerid, msg) {
     const player = getObj('player', playerid)
     if (player) {
       const name = player.get('displayname')
-      sendChat('STA Pool', '/w "' + name + '" ' + msg)
+      sendChat(SCRIPT_NAME, '/w "' + name + '" ' + msg)
     } else {
-      sendChat('STA Pool', msg)
+      sendChat(SCRIPT_NAME, msg)
     }
   }
 
