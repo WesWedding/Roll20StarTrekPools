@@ -1,3 +1,40 @@
+
+// Styles largely cribbed from the roll template of the Roll20 Star Trek
+// Adventures character sheet.  Grabbed Sept 2020.
+const style = {
+  base: 'background-color: rgb(0,19,35); ' +
+    'background-repeat: no-repeat; ' +
+    'border-radius: 15px 15px 15px 15px; ' +
+    'border-spacing: 0; ' +
+    'color: rgb(163,64,113); ' +
+    'font-size: 1.5em; ' +
+    'font-weight: bold; ' +
+    'padding: 2px; ' +
+    'width: 230px;',
+  body: 'border: none; ' +
+    'color: rgb(195,188,222); ' +
+    'font-size: 1em; ' +
+    'margin: 5px 5px 5px 5px; ' +
+    'text-align: center;',
+  quantity: 'display: inline-block; ' +
+    'padding: 5px 5px 0px 5px;',
+  quantMomentum: 'color: #20bcff;',
+  quantThreat: 'color: #d71010; margin-left: 50px;',
+  header: 'padding: 8px 0px 8px 0px;' +
+    'font-size: 2em;',
+  sectionHead: 'background-color: rgb(245,157,8); ' +
+    'border-radius: 2em; ' +
+    'display: block; ' +
+    'height: 15px; ' +
+    'letter-spacing: 1px; ' +
+    'text-transform: uppercase;',
+  headSpan: 'background: rgb(0,19,35); ' +
+    'color: rgb(163,64,113); ' +
+    'font-size: 15px; ' +
+    'padding: 0px 5px 0px 5px; ' +
+    'vertical-align: top;'
+}
+
 var STAPoolTracker = STAPoolTracker || (function () {
   'use strict'
 
@@ -5,9 +42,7 @@ var STAPoolTracker = STAPoolTracker || (function () {
     MOMENTUM: '!momentum',
     THREAT: '!threat',
   }
-
   const STATE_NAME = 'STAPools'
-
 
   function init () {
     if (!_.has(state, STATE_NAME)) {
@@ -107,14 +142,14 @@ var STAPoolTracker = STAPoolTracker || (function () {
     const threat = state[STATE_NAME].threat
 
     return '' +
-      '<div class="sheet-rolltemplate-strek">' +
-        '<div class="sheet-rolltemplate-body">' +
-          '<div class="sheet-dice">' +
-            '<span style="color: #20bcff;">' + momentum.toString(10) + '</span>' +
-            '<span style="color: #d71010; margin-left: 50px;">' + threat.toString(10) + '</span>' +
+      '<div style="' + style.base + '">' +
+        '<div style="' + style.body + '">' +
+          '<div style="' + style.quantity + '">' +
+            '<span style="' + style.quantMomentum + '">' + momentum.toString(10) + '</span>' +
+            '<span style="' + style.quantThreat + '">' + threat.toString(10) + '</span>' +
           '</div>' +
-          '<div class="sheet-rolltemplate-header">' +
-            '<div class="sheet-sectionheader"><span>Momentum / Threat</span></div>' +
+          '<div style="' + style.header + '">' +
+            '<div style="' + style.sectionHead + '"><span style="' + style.headSpan + '">Momentum / Threat</span></div>' +
           '</div>' +
         '</div>' +
       '</div>'
