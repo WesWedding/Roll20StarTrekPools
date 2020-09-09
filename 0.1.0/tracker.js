@@ -61,6 +61,12 @@ var STAPoolTracker = STAPoolTracker || (function () {
       }
     }
 
+    if (!_handout) {
+      _handout = _getOrCreateHandout()
+      sendChat(SCRIPT_NAME, '"Momentum and Threat Pools" handout is available!  Check it to keep an eye on Momentum and Threat!')
+    }
+    _handout.set('notes', _buildPoolHtml())
+
     on('chat:message', (msg) => {
       if (msg.type !== 'api') return
 
@@ -71,6 +77,23 @@ var STAPoolTracker = STAPoolTracker || (function () {
       const args = msg.content.split(' ').slice(1)
       _handleCmd(msg.playerid, found, args)
     })
+  }
+
+  function _getOrCreateHandout () {
+    let handout = findObjs({
+      type: "handout",
+      name: "Momentum and Threat Pools"
+    })[0];
+    log(findObjs({
+      type: "handout",
+      name: "Momentum and Threat Pools"
+    }))
+    if (!handout) {
+      handout = createObj("handout",{
+        name: "Momentum and Threat Pools"
+      });
+    }
+    return handout;
   }
 
   function _handleCmd(playerid, command, args) {
@@ -91,9 +114,13 @@ var STAPoolTracker = STAPoolTracker || (function () {
     switch (command) {
       case CMD.MOMENTUM:
         _modifyPool(playerid, POOLS.MOMENTUM, arg0,arg1)
+        _chatPools()
+        _handout.set('notes', _buildPoolHtml())
         break
       case CMD.THREAT:
         _modifyPool(playerid, POOLS.THREAT, arg0, arg1)
+        _chatPools()
+        _handout.set('notes', _buildPoolHtml())
         break
       default:
         // Do nothing.
@@ -121,7 +148,6 @@ var STAPoolTracker = STAPoolTracker || (function () {
       } else {
         pools[poolName] -= value
       }
-      _chatPools()
     }
 
     if (arg0 === 'set') {
@@ -137,7 +163,6 @@ var STAPoolTracker = STAPoolTracker || (function () {
       }
 
       pools[poolName] = value
-      _chatPools()
     }
   }
 
@@ -198,6 +223,7 @@ var STAPoolTracker = STAPoolTracker || (function () {
       momentum: 0,
     }
     _chatPools()
+    _handout.set('notes', _buildPoolHtml())
   }
 
   return {
