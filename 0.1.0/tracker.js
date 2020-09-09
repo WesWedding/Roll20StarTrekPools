@@ -84,10 +84,6 @@ var STAPoolTracker = STAPoolTracker || (function () {
       type: "handout",
       name: "Momentum and Threat Pools"
     })[0];
-    log(findObjs({
-      type: "handout",
-      name: "Momentum and Threat Pools"
-    }))
     if (!handout) {
       handout = createObj("handout",{
         name: "Momentum and Threat Pools"
