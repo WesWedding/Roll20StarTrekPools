@@ -99,13 +99,25 @@ var STAPoolTracker = STAPoolTracker || (function () {
 
   function _chatPools() {
     const html = _buildPoolHtml()
-    sendChat('STA Pool', html)
+    sendChat('Pools', html)
   }
 
   function _buildPoolHtml() {
     const momentum = state[STATE_NAME].momentum
     const threat = state[STATE_NAME].threat
-    return '<div>::::NEEDS STYLING:::: T: ' + threat.toString(10) + ', M: ' + momentum.toString(10) + '</div>'
+
+    return '' +
+      '<div class="sheet-rolltemplate-strek">' +
+        '<div class="sheet-rolltemplate-body">' +
+          '<div class="sheet-dice">' +
+            '<span style="color: #20bcff;">' + momentum.toString(10) + '</span>' +
+            '<span style="color: #d71010; margin-left: 50px;">' + threat.toString(10) + '</span>' +
+          '</div>' +
+          '<div class="sheet-rolltemplate-header">' +
+            '<div class="sheet-sectionheader"><span>Momentum / Threat</span></div>' +
+          '</div>' +
+        '</div>' +
+      '</div>'
   }
 
   function setMomentum(val) {
