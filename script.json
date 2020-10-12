@@ -1,7 +1,7 @@
 {
   "name": "Star Trek Adventures Momentum and Threat Pool Tracker",
   "script": "tracker.js",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "previousversions": [],
   "description": "Star Trek Adventures Momentum/Thread Tracker allows players and GM to track the available Momentum and Threat that can be used during gameplay.  In addition to pure chat-driven functionality, you can refer to a handy Handout.",
   "authors": "Weston Wedding",
