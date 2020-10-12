@@ -118,7 +118,6 @@ var STAPoolTracker = STAPoolTracker || (function () {
       case CMD.MOMENTUM:
         res = _modifyPool(player, POOLS.MOMENTUM, arg0,arg1)
         if (!res) return
-        sendChat()
         _chatPools()
         _handout.set('notes', _buildPoolHtml())
         break
