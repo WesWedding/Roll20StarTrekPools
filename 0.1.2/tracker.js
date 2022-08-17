@@ -1,3 +1,18 @@
+/**
+ * Provides methods to track and modify Threat and Momentum Pools for Star Trek Adventures.
+ *
+ * !threat [add/sub/set] [number]
+ * !momentum [add/sub/set] [number]
+ *
+ * For example: To remove some Momentum, a player would type "!momentum sub 2"
+ *
+ * You can also silently check the pools by using !threat or !momentum without any arguments.
+ * To remind everyone what the pools currently look like, use:
+ * ![threat/momentum] show
+ *
+ * For convenience, players may use !t or !m instead of the full word.
+ */
+
 var STAPoolTracker = STAPoolTracker || (function () {
   'use strict'
 
@@ -43,7 +58,9 @@ var STAPoolTracker = STAPoolTracker || (function () {
 
   const CMD = {
     MOMENTUM: '!momentum',
+    M: '!m',
     THREAT: '!threat',
+    T: '!t',
   }
 
   const POOLS = {
@@ -116,12 +133,14 @@ var STAPoolTracker = STAPoolTracker || (function () {
     let res = false
     switch (command) {
       case CMD.MOMENTUM:
+      case CMD.M:
         res = _modifyPool(player, POOLS.MOMENTUM, arg0,arg1)
         if (!res) return
         _chatPools()
         _handout.set('notes', _buildPoolHtml())
         break
       case CMD.THREAT:
+      case CMD.T:
         res = _modifyPool(player, POOLS.THREAT, arg0, arg1)
         if (!res) return
         _chatPools()
