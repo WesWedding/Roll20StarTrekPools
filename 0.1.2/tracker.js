@@ -173,6 +173,7 @@ var STAPoolTracker = STAPoolTracker || (function () {
   function _modifyPool(player, poolName, arg0, arg1) {
     const pools = state[STATE_NAME]
     if (!pools[poolName] && pools[poolName] !== 0 ) return
+    if (!_.contains([ACTION.ADD, ACTION.SUB, ACTION.SET], arg0)) return
 
     if (arg0 === ACTION.ADD || arg0 === ACTION.SUB) {
       if (!arg1) {
