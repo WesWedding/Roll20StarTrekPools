@@ -21,6 +21,10 @@ var STAPoolTracker = STAPoolTracker || (function () {
 
   // Styles largely cribbed from the roll template of the Roll20 Star Trek
   // Adventures character sheet.  Grabbed Sept 2020.
+  const COLORS = {
+    MOMENTUM: "#20bcff",
+    THREAT: "#d71010",
+  }
   const STYLES = {
     base: 'background-color: rgb(0,19,35); ' +
       'background-repeat: no-repeat; ' +
@@ -38,8 +42,10 @@ var STAPoolTracker = STAPoolTracker || (function () {
       'text-align: center;',
     quantity: 'display: inline-block; ' +
       'padding: 5px 5px 0px 5px;',
-    quantMomentum: 'color: #20bcff;',
-    quantThreat: 'color: #d71010; margin-left: 50px;',
+    quantMomentum: `color: ${COLORS.MOMENTUM};`,
+    quantThreat: `color: ${COLORS.THREAT}; margin-left: 50px;`,
+    inlineQuantMomentum: `font-weight: bold; color: ${COLORS.MOMENTUM};`,
+    inlineQuantThreat: `font-weight: bold; color: ${COLORS.THREAT};`,
     header: 'padding: 8px 0px 8px 0px;' +
       'font-size: 2em;',
     sectionHead: 'background-color: rgb(245,157,8); ' +
@@ -61,6 +67,14 @@ var STAPoolTracker = STAPoolTracker || (function () {
     M: '!m',
     THREAT: '!threat',
     T: '!t',
+  }
+
+  const ACTION = {
+    ADD: 'add',
+    SUB: 'sub',
+    SET: 'set',
+    SHOW: 'show',
+    EMPTY: 'empty',
   }
 
   const POOLS = {
@@ -118,13 +132,15 @@ var STAPoolTracker = STAPoolTracker || (function () {
 
     const arg0 = args[0]
 
-    if (args[0] === 'show') {
+    if (args[0] === ACTION.SHOW) {
+      _chatActionTaken(player, args[0])
       _chatPools()
       return
     }
 
-    if (args[0] === 'reset') {
-      resetPools()
+    if (args[0] === ACTION.EMPTY) {
+      _chatActionTaken(player, args[0])
+      emptyPools()
       return
     }
 
@@ -136,6 +152,7 @@ var STAPoolTracker = STAPoolTracker || (function () {
       case CMD.M:
         res = _modifyPool(player, POOLS.MOMENTUM, arg0,arg1)
         if (!res) return
+        _chatActionTaken(player, args[0], POOLS.MOMENTUM, arg1)
         _chatPools()
         _handout.set('notes', _buildPoolHtml())
         break
@@ -143,6 +160,7 @@ var STAPoolTracker = STAPoolTracker || (function () {
       case CMD.T:
         res = _modifyPool(player, POOLS.THREAT, arg0, arg1)
         if (!res) return
+        _chatActionTaken(player, args[0], POOLS.THREAT, arg1)
         _chatPools()
         _handout.set('notes', _buildPoolHtml())
         break
@@ -156,7 +174,7 @@ var STAPoolTracker = STAPoolTracker || (function () {
     const pools = state[STATE_NAME]
     if (!pools[poolName] && pools[poolName] !== 0 ) return
 
-    if (arg0 === 'add' || arg0 === 'sub') {
+    if (arg0 === ACTION.ADD || arg0 === ACTION.SUB) {
       if (!arg1) {
         _reportError(player, 'Missing value to add/subtract from ' + poolName)
         return false
@@ -167,14 +185,14 @@ var STAPoolTracker = STAPoolTracker || (function () {
         _reportError(player, 'Invalid value (Not a number!)')
         return false
       }
-      if (arg0 === 'add') {
+      if (arg0 === ACTION.ADD) {
         pools[poolName] += value
       } else {
         pools[poolName] -= value
       }
     }
 
-    if (arg0 === 'set') {
+    if (arg0 === ACTION.SET) {
       if (!arg1) {
         _reportError(player, 'Missing value to set ' + poolName +' to.')
         return false
@@ -192,15 +210,54 @@ var STAPoolTracker = STAPoolTracker || (function () {
     return true
   }
 
-  function _chatPools(player) {
+  function _chatActionTaken(activePlayer, action, poolName, arg1) {
+    let actionText = ""
+    let playerId = activePlayer.get("_id")
+    let playerName = activePlayer.get("_displayname")
+
+    let poolString = poolName ? _formatPoolName(poolName) : ""
+
+    switch (action) {
+      case ACTION.SHOW:
+        actionText = "Showing pools."
+        break
+      case ACTION.ADD:
+        actionText = `${playerName} adds <b>${arg1}</b> to ${poolString}`
+        break
+      case ACTION.SUB:
+        actionText = `${playerName} removes <b>${arg1}</b> from ${poolString}`
+        break
+      case ACTION.SET:
+        actionText = `${playerName} sets ${poolString} to <b>${arg1}</b>`
+        break
+      case ACTION.EMPTY:
+        actionText = `${playerName} empties/resets the threat and momentum pools.`
+        break
+    }
+
+    sendChat("player|" + playerId, actionText)
+  }
+
+  function _formatPoolName(poolName) {
+    switch (poolName) {
+      case POOLS.MOMENTUM:
+        return `<span style="${STYLES.inlineQuantMomentum}">Momentum</span>`
+      case POOLS.THREAT:
+        return `<span style="${STYLES.inlineQuantThreat}">Threat</span>`
+      default:
+        return "<b>????</b>"
+    }
+  }
+
+  function _chatPools(target) {
     const html = _buildPoolHtml()
-    if (!player) {
+    if (!target) {
       sendChat(SCRIPT_NAME, html)
       return
     }
-    log (player)
+    log (target)
 
-    sendChat(SCRIPT_NAME, '/w "' + player.get("displayname") + '" ' + html)
+    sendChat(SCRIPT_NAME, '/w "' + target.get("displayname") + '" ' + html)
   }
 
   function _buildPoolHtml() {
@@ -252,7 +309,7 @@ var STAPoolTracker = STAPoolTracker || (function () {
     }
   }
 
-  function resetPools() {
+  function emptyPools() {
     state[STATE_NAME] = {
       threat: 0,
       momentum: 0,
@@ -263,7 +320,7 @@ var STAPoolTracker = STAPoolTracker || (function () {
 
   return {
     init: init,
-    reset: resetPools,
+    empty: emptyPools,
     modMomentum: modMomentum,
     setMomentum: setMomentum,
     modThreat: modThreat,
