@@ -94,7 +94,7 @@ var STAPoolTracker = STAPoolTracker || (function () {
 
     if (!_handout) {
       _handout = _getOrCreateHandout()
-      sendChat(SCRIPT_NAME, '"Momentum and Threat Pools" handout is available!  Check it to keep an eye on Momentum and Threat!')
+      sendChat(SCRIPT_NAME, '"Momentum and Threat Pools" handout is available!  Check it to keep an eye on Momentum and Threat!', null, {noarchive:true})
     }
     _handout.set('notes', _buildPoolHtml())
 
