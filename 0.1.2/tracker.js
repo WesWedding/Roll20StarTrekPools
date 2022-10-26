@@ -150,7 +150,7 @@ var STAPoolTracker = STAPoolTracker || (function () {
     switch (command) {
       case CMD.MOMENTUM:
       case CMD.M:
-        res = _modifyPool(player, POOLS.MOMENTUM, arg0,arg1)
+        res = _modifyPool(player, POOLS.MOMENTUM, arg0, arg1)
         if (!res) return
         _chatActionTaken(player, args[0], POOLS.MOMENTUM, arg1)
         _chatPools()
